@@ -1,7 +1,7 @@
 {
-  "name": "react-start-app",
+  "name": "ionghitun/react-start-app",
   "version": "1.0.0",
-  "description": "React start app",
+  "description": "React starter kit.",
   "scripts": {
     "dev": "webpack-dev-server --content-base dev/ --inline --port 8080 --progress --colors --history-api-fallback --config=./build/dev.js --open",
     "prod": "webpack --config=./build/prod.js"
@@ -14,7 +14,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "clean-webpack-plugin": "^0.1.18",
-    "copy-webpack-plugin": "^4.3.1",
+    "copy-webpack-plugin": "^4.4.1",
     "css-loader": "^0.28.9",
     "eslint": "^4.17.0",
     "eslint-loader": "^1.9.0",
@@ -32,7 +32,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.20.1",
-    "webpack": "^3.10.0"
+    "webpack": "^3.11.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
