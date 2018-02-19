@@ -4,5 +4,8 @@
 # production
 /public
 
+# misc
+constants.js
+
 # ide
 /.idea
