@@ -7,6 +7,7 @@
     "prod": "webpack --config=./build/prod.js"
   },
   "dependencies": {
+    "autobind-decorator": "^2.1.0",
     "axios": "^0.17.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",

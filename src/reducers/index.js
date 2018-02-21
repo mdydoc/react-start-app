@@ -1,9 +1,11 @@
 import {combineReducers} from 'redux';
 
 import Misc from './Misc';
+import Auth from './Auth';
 
 const reducers = {
-    ...Misc
+    ...Misc,
+    ...Auth
 };
 
 export default combineReducers(reducers);

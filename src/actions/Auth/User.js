@@ -2,9 +2,9 @@ import axios from 'axios';
 
 import API_URL from '../../../constants';
 
-export const AUTHENTICATE = '@authenticate';
+export const LOGIN_USER = '@login-user';
 
-export const login = (payload = {}) => {
+export const loginUser = (payload = {}) => {
     return async (dispatch) => {
         try {
             const res = await axios.post(`${API_URL}/login`, {...payload});
@@ -16,6 +16,14 @@ export const login = (payload = {}) => {
     };
 };
 
+export const setUser = (payload = {}) => {
+    return {
+        payload,
+        type: LOGIN_USER
+    };
+};
+
 export default {
-    login
+    loginUser,
+    setUser
 };
