@@ -1,10 +1,11 @@
-import {LOGIN_USER} from '../../actions/Auth/User';
+import {WINDOW_RESIZE} from '../../actions/Misc/responsive';
 
 export default (state = {
-    user: null
+    width: window.innerWidth,
+    height: window.innerHeight
 }, action) => {
     switch (action.type) {
-        case LOGIN_USER:
+        case WINDOW_RESIZE:
             state = {...state, ...action.payload};
             break;
     }

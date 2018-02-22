@@ -1,4 +1,4 @@
-import responsive from './Responsive';
+import responsive from './responsive';
 
 export default {
     responsive

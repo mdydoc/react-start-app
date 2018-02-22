@@ -1,15 +1,19 @@
-import axios from 'axios';
-
-import API_URL from '../../../constants';
+import http from '../../libs/http';
 
 export const LOGIN_USER = '@login-user';
 
 export const loginUser = (payload = {}) => {
     return async (dispatch) => {
         try {
-            const res = await axios.post(`${API_URL}/login`, {...payload});
+            const res = await http.call('login').post({...payload});
 
-            console.log(res);
+            if (!res.isError) {
+                localStorage.setItem('token', res.data.token);
+                dispatch(setUser(res.data.user));
+            } else {
+                //TODO set login error
+                console.log(res);
+            }
         } catch (e) {
             console.error(e);
         }

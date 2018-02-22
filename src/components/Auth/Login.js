@@ -4,10 +4,12 @@ import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
 
 import Layout from '../Misc/Layout';
-
-import userActions from '../../actions/Auth/User';
+import userActions from '../../actions/Auth/user';
 
 @connect(
+    store => ({
+        user: store.user
+    }),
     dispatch => ({
         ...bindActionCreators(userActions, dispatch)
     })

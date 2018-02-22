@@ -3,7 +3,7 @@ import {Provider} from 'react-redux';
 import Router from '../../router';
 import store from '../../store';
 
-import {onResize} from '../actions/Misc/Responsive';
+import {onResize} from '../actions/Misc/responsive';
 
 export default class App extends Component {
     componentDidMount() {
