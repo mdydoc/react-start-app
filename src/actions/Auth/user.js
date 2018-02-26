@@ -1,6 +1,6 @@
 import http from '../../libs/http';
 
-export const LOGIN_USER = '@login-user';
+export const SET_USER = '@set-user';
 
 export const loginUser = (payload = {}) => {
     return async (dispatch) => {
@@ -12,7 +12,7 @@ export const loginUser = (payload = {}) => {
                 dispatch(setUser(res.data.user));
             } else {
                 //TODO set login error
-                console.log(res);
+                console.log('Error:', res);
             }
         } catch (e) {
             console.error(e);
@@ -20,14 +20,52 @@ export const loginUser = (payload = {}) => {
     };
 };
 
-export const setUser = (payload = {}) => {
+export const registerUser = (payload = {}) => {
+    return async (dispatch) => {
+        try {
+            const res = await http.call('register').post({...payload});
+
+            if (!res.isError) {
+                localStorage.setItem('token', res.data.token);
+                dispatch(setUser(res.data.user));
+            } else {
+                //TODO set register error
+                console.log('Error:', res);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+};
+
+export const logoutUser = () => {
+    return async (dispatch) => {
+        try {
+            const res = await http.call('logout').post();
+
+            if (!res.isError) {
+                localStorage.removeItem('token');
+                dispatch(setUser(false));
+            } else {
+                //TODO set login error
+                console.log('Error:', res);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+};
+
+export const setUser = (payload) => {
     return {
         payload,
-        type: LOGIN_USER
+        type: SET_USER
     };
 };
 
 export default {
     loginUser,
+    registerUser,
+    logoutUser,
     setUser
 };

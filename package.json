@@ -10,13 +10,13 @@
     "autobind-decorator": "^2.1.0",
     "axios": "^0.17.1",
     "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
+    "babel-loader": "^7.1.3",
     "babel-polyfill": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "clean-webpack-plugin": "^0.1.18",
-    "copy-webpack-plugin": "^4.4.1",
+    "copy-webpack-plugin": "^4.4.2",
     "css-loader": "^0.28.10",
     "eslint": "^4.18.1",
     "eslint-loader": "^1.9.0",
@@ -40,7 +40,7 @@
     "babel-eslint": "^8.2.2",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-regenerator-runtime": "^6.5.0",
-    "webpack-dev-server": "^2.11.1"
+    "webpack-dev-server": "^2.11.2"
   },
   "repository": "https://github.com/ionghitun/react-start-app",
   "license": "MIT"

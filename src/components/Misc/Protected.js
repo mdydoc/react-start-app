@@ -5,9 +5,9 @@ export const Protected = (WrappedComponent) => {
         constructor(props) {
             super(props);
 
-            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
 
-            if (!user && props.location.pathname !== '/login') {
+            if (!token && props.location.pathname !== '/login') {
                 this.props.history.push("/login");
             }
         }

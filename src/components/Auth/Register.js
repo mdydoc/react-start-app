@@ -15,7 +15,7 @@ import userActions from '../../actions/Auth/user';
         ...bindActionCreators(userActions, dispatch)
     })
 )
-export default class Login extends Component {
+export default class Register extends Component {
     constructor(props) {
         super(props);
 
@@ -26,8 +26,10 @@ export default class Login extends Component {
         }
 
         this.state = {
+            name: '',
             email: '',
-            password: ''
+            password: '',
+            retypePassword: ''
         };
     }
 
@@ -38,16 +40,18 @@ export default class Login extends Component {
     }
 
     @autobind
-    _login() {
-        const {loginUser} = this.props;
-        const {email, password} = this.state;
+    _register() {
+        const {registerUser} = this.props;
+        const {name, email, password, retypePassword} = this.state;
 
-        let credentials = {
+        let userDetails = {
+            name,
             email,
-            password
+            password,
+            retypePassword
         };
 
-        loginUser(credentials);
+        registerUser(userDetails);
     }
 
     @autobind
@@ -57,15 +61,18 @@ export default class Login extends Component {
     }
 
     render() {
-        const {email, password} = this.state;
+        const {name, email, password, retypePassword} = this.state;
 
         return (
             <Layout>
-                <input type="text" name="email" placeholder="email" value={email} onChange={this._handleChange}/>
+                <input type="text" name="name" placeholder="name" value={name} onChange={this._handleChange}/>
+                <input type="email" name="email" placeholder="email" value={email} onChange={this._handleChange}/>
                 <input type="password" name="password" placeholder="password" value={password}
                        onChange={this._handleChange}/>
-                <input type="button" value="Login" onClick={this._login}/>
-                <Link to="/register">Register</Link>
+                <input type="password" name="retypePassword" placeholder="retype password" value={retypePassword}
+                       onChange={this._handleChange}/>
+                <input type="button" value="Register" onClick={this._register}/>
+                <Link to="/login">Login</Link>
             </Layout>
         );
     }

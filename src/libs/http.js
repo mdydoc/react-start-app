@@ -60,7 +60,7 @@ class Http {
         };
     }
 
-    async get(options) {
+    async get(options = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
@@ -79,7 +79,7 @@ class Http {
         return this.build();
     }
 
-    async post(data) {
+    async post(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
@@ -109,7 +109,7 @@ class Http {
         return this.build();
     }
 
-    async put(data) {
+    async put(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
@@ -124,7 +124,7 @@ class Http {
         return this.build();
     }
 
-    async patch(data) {
+    async patch(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
