@@ -27,7 +27,7 @@ module.exports = {
         errorDetails: true
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 loaders: [

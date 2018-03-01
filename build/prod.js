@@ -1,20 +1,18 @@
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const plugins = [
     new CleanWebpackPlugin(['public'], {
         root: `${__dirname}/../`
     }),
-    new webpack.optimize.UglifyJsPlugin({
-        comments: false,
+    new UglifyJsPlugin({
         sourceMap: false
     }),
-    new ExtractTextPlugin('bundle.min.css'),
     new OptimizeCssAssetsPlugin(),
     new HtmlWebpackPlugin({
         title: 'React start app',
@@ -62,7 +60,7 @@ module.exports = {
         errorDetails: true
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 loader: [
@@ -72,13 +70,10 @@ module.exports = {
             },
             {
                 test: /\.s?css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        'css-loader',
-                        'sass-loader'
-                    ]
-                })
+                loader: [
+                    'css-loader',
+                    'sass-loader'
+                ]
             },
             {
                 test: /\.woff2?$|\.ttf$|\.eot$|\.svg$|\.ico$/,
