@@ -9,7 +9,6 @@ import Register from '../src/components/Auth/Register';
 import Logout from '../src/components/Auth/Logout';
 
 export default class Router extends Component {
-
     render() {
         return (
             <BrowserRouter>
