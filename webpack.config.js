@@ -57,7 +57,9 @@ module.exports = {
         new CleanWebpackPlugin([
             'public/resources',
             'public/*.*'
-        ]),
+        ], {
+            exclude:  ['.htaccess'],
+        }),
         new CopyWebpackPlugin([
             {
                 from: 'src/resources/images',

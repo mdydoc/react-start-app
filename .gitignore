@@ -2,7 +2,8 @@
 /node_modules
 
 # production
-/public
+/public/*
+!public/.htaccess
 
 # misc
 constants.js
