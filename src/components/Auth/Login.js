@@ -1,21 +1,18 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
-import {Link} from 'react-router-dom';
 import FacebookLogin from 'react-facebook-login';
-import {Row, Col, Clearfix} from 'react-bootstrap';
+import {Col, Clearfix, FormControl, Button, FormGroup, Alert} from 'react-bootstrap';
 
-import Layout from '../Misc/Layout';
 import userActions from '../../actions/Auth/user';
 
 import {FACEBOOK_API_ID} from '../../../constants';
 
-import Menu from '../Misc/Menu';
-
 @connect(
     store => ({
-        user: store.user
+        user: store.user.user,
+        errors: store.user.errors
     }),
     dispatch => ({
         ...bindActionCreators(userActions, dispatch)
@@ -25,27 +22,15 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
 
-        const token = localStorage.getItem('token');
-
-        if (token) {
-            this.props.history.push("/");
-        }
-
         this.state = {
             email: '',
             password: ''
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.user) {
-            this.props.history.push("/");
-        }
-    }
-
     @autobind
     _responseFacebook(response) {
-        if (response && response.id) {
+        if (response && response.id && response.email) {
             const {loginUser} = this.props;
             const {name, email, id} = response;
 
@@ -57,8 +42,20 @@ export default class Login extends Component {
 
             loginUser(credentials);
         } else {
-            //TODO set facebook login error
-            console.error(response);
+            const {setUserErrors} = this.props;
+
+            let facebookError = '';
+            if (response) {
+                if (response.hasOwnProperty('status')) {
+                    facebookError = 'You cancel facebook login!';
+                } else {
+                    facebookError = 'You did not authorize all requirements!';
+                }
+            } else {
+                facebookError = 'Something went wrong, try again!';
+            }
+
+            setUserErrors({facebookError});
         }
     }
 
@@ -83,31 +80,41 @@ export default class Login extends Component {
 
     render() {
         const {email, password} = this.state;
+        const {errors} = this.props;
 
         return (
-            <Layout>
-                <Menu/>
-                <Row>
-                    <Col md={6}>
-                        <input type="text" name="email" placeholder="email" value={email} onChange={this._handleChange}/>
-                        <input type="password" name="password" placeholder="password" value={password}
-                               onChange={this._handleChange}/>
-                        <input type="button" value="Login" onClick={this._login}/>
-                    </Col>
-                    <Col md={6}>
-                        <FacebookLogin
-                            appId={FACEBOOK_API_ID}
-                            autoLoad={false}
-                            size="small"
-                            fields="name,email"
-                            scope="email,public_profile"
-                            callback={this._responseFacebook}
-                        />
-                    </Col>
-                    <Clearfix/>
-                    <Link to="/register">Register</Link>
-                </Row>
-            </Layout>
+            <Fragment>
+                <Col xs={12}>
+                    {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
+                    <FormGroup>
+                        {errors && errors.email && <Alert bsStyle="danger">{errors.email}</Alert>}
+                        <FormControl type="text" name="email" placeholder="email" value={email}
+                                     onChange={this._handleChange}/>
+                    </FormGroup>
+                    <FormGroup>
+                        {errors && errors.password && <Alert bsStyle="danger">{errors.password}</Alert>}
+                        <FormControl type="password" name="password" placeholder="password" value={password}
+                                     onChange={this._handleChange}/>
+                    </FormGroup>
+                    <Button className="button" onClick={this._login}>Login</Button>
+                </Col>
+                <Clearfix/>
+                <hr/>
+                <Col xs={12}>
+                    {errors && errors.facebookError && <Alert bsStyle="danger">{errors.facebookError}</Alert>}
+                    <FacebookLogin
+                        appId={FACEBOOK_API_ID}
+                        autoLoad={false}
+                        size="small"
+                        fields="name,email"
+                        scope="email,public_profile"
+                        cssClass="facebook-login"
+                        callback={this._responseFacebook}
+                        authType="rerequest"
+                    />
+                </Col>
+                <Clearfix/>
+            </Fragment>
         );
     }
 }

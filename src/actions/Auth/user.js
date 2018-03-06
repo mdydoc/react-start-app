@@ -1,6 +1,7 @@
 import http from '../../libs/http';
 
 export const SET_USER = '@set-user';
+export const SET_USER_ERRORS = '@set-user-errors';
 
 export const loginUser = (payload = {}) => {
     return async (dispatch) => {
@@ -10,9 +11,9 @@ export const loginUser = (payload = {}) => {
             if (!res.isError) {
                 localStorage.setItem('token', res.data.token);
                 dispatch(setUser(res.data.user));
+                dispatch(setUserErrors(false));
             } else {
-                //TODO set login error
-                console.log('Error:', res);
+                dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
             console.error(e);
@@ -28,9 +29,9 @@ export const registerUser = (payload = {}) => {
             if (!res.isError) {
                 localStorage.setItem('token', res.data.token);
                 dispatch(setUser(res.data.user));
+                dispatch(setUserErrors(false));
             } else {
-                //TODO set register error
-                console.log('Error:', res);
+                dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
             console.error(e);
@@ -47,8 +48,7 @@ export const logoutUser = () => {
                 localStorage.removeItem('token');
                 dispatch(setUser(false));
             } else {
-                //TODO set login error
-                console.log('Error:', res);
+                dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
             console.error(e);
@@ -63,9 +63,17 @@ export const setUser = (payload) => {
     };
 };
 
+export const setUserErrors = (payload) => {
+    return {
+        payload,
+        type: SET_USER_ERRORS
+    };
+};
+
 export default {
     loginUser,
     registerUser,
     logoutUser,
-    setUser
+    setUser,
+    setUserErrors
 };

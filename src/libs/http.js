@@ -25,10 +25,9 @@ class Http {
         this._response = false;
 
         let isError = false;
-        let errorMessage = '';
+        let errorMessage = {};
         let data = false;
 
-        //TODO be updated depending or API response
         if (response) {
             if (response.responseType && response.responseType === 'success') {
                 data = response.data;
@@ -38,19 +37,19 @@ class Http {
                     for (let error in response.errorMessage) {
                         if (response.errorMessage.hasOwnProperty(error)) {
                             if (Array.isArray(response.errorMessage[error])) {
-                                errorMessage += response.errorMessage[error][0] + "\n";
+                                errorMessage = {...errorMessage, [error]: response.errorMessage[error][0]};
                             } else {
-                                errorMessage += response.errorMessage[error] + "\n";
+                                errorMessage = {...errorMessage, [error]: response.errorMessage[error]};
                             }
                         }
                     }
                 } else {
-                    errorMessage = response.errorMessage;
+                    errorMessage = {error: response.errorMessage};
                 }
             }
         } else {
             isError = true;
-            errorMessage = 'Invalid response from API';
+            errorMessage = {error: 'Invalid response from API'};
         }
 
         return {

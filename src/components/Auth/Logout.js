@@ -6,7 +6,7 @@ import userActions from '../../actions/Auth/user';
 
 @connect(
     store => ({
-        user: store.user
+        user: store.user.user
     }),
     dispatch => ({
         ...bindActionCreators(userActions, dispatch)
@@ -19,7 +19,7 @@ export default class Logout extends Component {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            this.props.history.push("/login");
+            this.props.history.push("/");
         }
 
         const {logoutUser} = this.props;
@@ -29,7 +29,7 @@ export default class Logout extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (!nextProps.user) {
-            this.props.history.push("/login");
+            this.props.history.push("/");
         }
     }
 
