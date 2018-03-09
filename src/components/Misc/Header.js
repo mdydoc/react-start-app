@@ -1,12 +1,14 @@
 import React, {Component, Fragment} from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
-import userActions, {setUserErrors} from "../../actions/Auth/user";
+import userActions from "../../actions/Auth/user";
 import {bindActionCreators} from "redux";
 import autobind from 'autobind-decorator';
 import {Modal, Col, Row, Clearfix} from 'react-bootstrap';
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
+
+import trans from '../../libs/translate';
 
 @connect(
     store => ({
@@ -87,7 +89,7 @@ export default class Header extends Component {
                         <Link to="/logout" className="header-button">Logout</Link>
                     </Fragment>}
                     {!user && <Fragment>
-                        <a className="header-button" onClick={this._openLoginModal}>Login / Register</a>
+                        <a className="header-button" onClick={this._openLoginModal}>{trans('home.login')}</a>
                     </Fragment>}
                     <Modal show={showloginModal} onHide={this._closeLoginModal}>
                         <Modal.Header closeButton>
@@ -99,7 +101,7 @@ export default class Header extends Component {
                                 <Login/>
                                 <hr/>
                                 <Col xs={12} className="info">
-                                    You don't have an account? Go to <a onClick={this._goToRegister}>Register</a>
+                                    You don't have an account? Go to <a onClick={this._goToRegister}>{trans('home.register')}</a>
                                 </Col>
                                 <Clearfix/>
                             </Row>
@@ -109,7 +111,7 @@ export default class Header extends Component {
                                 <Register/>
                                 <hr/>
                                 <Col xs={12} className="info">
-                                    Already have an account? Go to <a onClick={this._goToLogin}>Login</a>
+                                    Already have an account? Go to <a onClick={this._goToLogin}>{trans('home.login')}</a>
                                 </Col>
                             </Row>
                             }
