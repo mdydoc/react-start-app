@@ -5,10 +5,10 @@ export const Protected = (WrappedComponent) => {
         constructor(props) {
             super(props);
 
-            const token = localStorage.getItem('token');
+            const jwt = sessionStorage.getItem('jwt');
 
-            if (!token && props.location.pathname !== '/login') {
-                this.props.history.push("/login");
+            if (!jwt && props.location.pathname !== '/') {
+                this.props.history.push("/");
             }
         }
 

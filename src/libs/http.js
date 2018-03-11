@@ -20,6 +20,24 @@ class Http {
         return this;
     }
 
+    _getAuthConfig(withAuth) {
+        let axiosConfig = {};
+
+        if (!withAuth) {
+            return axiosConfig;
+        }
+
+        const jwt = sessionStorage.getItem('jwt');
+
+        if (jwt) {
+            axiosConfig = Object.assign({}, {
+                headers: {'Authorization': 'Bearer ' + jwt}
+            });
+        }
+
+        return axiosConfig;
+    }
+
     build() {
         let response = this._response && this._response.data ? {...this._response.data} : false;
         this._response = false;
@@ -59,17 +77,20 @@ class Http {
         };
     }
 
-    async get(options = {}) {
+    async get(options = {}, withAuth = false) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
+        let authConfig = this._getAuthConfig(withAuth);
+
         try {
             this._response = await this._axios.get(url, {
                 params: {
                     ...options
-                }
+                },
+                ...authConfig
             });
         } catch (e) {
             console.error(e);
@@ -78,14 +99,16 @@ class Http {
         return this.build();
     }
 
-    async post(data = {}) {
+    async post(data = {}, withAuth = false) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
+        let authConfig = this._getAuthConfig(withAuth);
+
         try {
-            this._response = await this._axios.post(url, data, {});
+            this._response = await this._axios.post(url, data, authConfig);
         } catch (e) {
             console.error(e);
         }
@@ -93,14 +116,16 @@ class Http {
         return this.build();
     }
 
-    async delete() {
+    async delete(withAuth = false) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
+        let authConfig = this._getAuthConfig(withAuth);
+
         try {
-            this._response = await this._axios.delete(url, {});
+            this._response = await this._axios.delete(url, authConfig);
         } catch (e) {
             console.error(e);
         }
@@ -108,14 +133,16 @@ class Http {
         return this.build();
     }
 
-    async put(data = {}) {
+    async put(data = {}, withAuth = false) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
+        let authConfig = this._getAuthConfig(withAuth);
+
         try {
-            this._response = await this._axios.put(url, data, {});
+            this._response = await this._axios.put(url, data, authConfig);
         } catch (e) {
             console.error(e);
         }
@@ -123,14 +150,16 @@ class Http {
         return this.build();
     }
 
-    async patch(data = {}) {
+    async patch(data = {}, withAuth = false) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
+        let authConfig = this._getAuthConfig(withAuth);
+
         try {
-            this._response = await this._axios.patch(url, data, {});
+            this._response = await this._axios.patch(url, data, authConfig);
         } catch (e) {
             console.error(e);
         }

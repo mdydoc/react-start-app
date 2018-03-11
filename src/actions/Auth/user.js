@@ -9,7 +9,12 @@ export const loginUser = (payload = {}) => {
             const res = await http.call('login').post({...payload});
 
             if (!res.isError) {
-                localStorage.setItem('token', res.data.token);
+                sessionStorage.setItem('jwt', res.data.jwt);
+
+                if (payload.hasOwnProperty('remember') && payload.remember && res.data.hasOwnProperty('rememberToken')) {
+                    localStorage.setItem('rememberToken', res.data.rememberToken);
+                }
+
                 dispatch(setUser(res.data.user));
                 dispatch(setUserErrors(false));
             } else {
@@ -27,7 +32,7 @@ export const registerUser = (payload = {}) => {
             const res = await http.call('register').post({...payload});
 
             if (!res.isError) {
-                localStorage.setItem('token', res.data.token);
+                sessionStorage.setItem('jwt', res.data.jwt);
                 dispatch(setUser(res.data.user));
                 dispatch(setUserErrors(false));
             } else {
@@ -42,10 +47,19 @@ export const registerUser = (payload = {}) => {
 export const logoutUser = () => {
     return async (dispatch) => {
         try {
-            const res = await http.call('logout').post();
+            const rememberToken = localStorage.getItem('rememberToken');
+
+            let logoutParams = {};
+
+            if (rememberToken) {
+                logoutParams = Object.assign({}, {rememberToken});
+            }
+
+            const res = await http.call('logout').post(logoutParams, true);
 
             if (!res.isError) {
-                localStorage.removeItem('token');
+                sessionStorage.clear();
+                localStorage.clear();
                 dispatch(setUser(false));
             } else {
                 dispatch(setUserErrors(res.errorMessage));

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
 import FacebookLogin from 'react-facebook-login';
-import {Col, Clearfix, FormControl, Button, FormGroup, Alert} from 'react-bootstrap';
+import {Col, Clearfix, FormControl, Button, FormGroup, Alert, Checkbox} from 'react-bootstrap';
 
 import userActions from '../../actions/Auth/user';
 
@@ -24,7 +24,8 @@ export default class Login extends Component {
 
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            remember: true
         };
     }
 
@@ -62,11 +63,12 @@ export default class Login extends Component {
     @autobind
     _login() {
         const {loginUser} = this.props;
-        const {email, password} = this.state;
+        const {email, password, remember} = this.state;
 
         let credentials = {
             email,
-            password
+            password,
+            remember
         };
 
         loginUser(credentials);
@@ -75,11 +77,23 @@ export default class Login extends Component {
     @autobind
     _handleChange(e) {
         const {name, value} = e.target;
-        this.setState({[name]: value});
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    @autobind
+    _handleRemember() {
+        const {remember} = this.state;
+
+        this.setState({
+            remember: !remember
+        });
     }
 
     render() {
-        const {email, password} = this.state;
+        const {email, password, remember} = this.state;
         const {errors} = this.props;
 
         return (
@@ -95,6 +109,9 @@ export default class Login extends Component {
                         {errors && errors.password && <Alert bsStyle="danger">{errors.password}</Alert>}
                         <FormControl type="password" name="password" placeholder="password" value={password}
                                      onChange={this._handleChange}/>
+                    </FormGroup>
+                    <FormGroup>
+                        <Checkbox checked={remember} onChange={this._handleRemember}>Remember me</Checkbox>
                     </FormGroup>
                     <Button className="button" onClick={this._login}>Login</Button>
                 </Col>

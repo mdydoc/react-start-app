@@ -14,7 +14,7 @@ export default class Router extends Component {
                 <Switch>
                     <Route exact path="/" component={Home}/>
 
-                    <Route exact path="/rofile" component={Protected(Profile)}/>
+                    <Route exact path="/profile" component={Protected(Profile)}/>
 
                     <Route path="/logout" component={Logout}/>
                 </Switch>

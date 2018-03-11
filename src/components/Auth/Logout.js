@@ -16,9 +16,9 @@ export default class Logout extends Component {
     constructor(props) {
         super(props);
 
-        const token = localStorage.getItem('token');
+        const jwt = sessionStorage.getItem('jwt');
 
-        if (!token) {
+        if (!jwt) {
             this.props.history.push("/");
         }
 
