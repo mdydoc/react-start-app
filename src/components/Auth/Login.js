@@ -121,6 +121,7 @@ export default class Login extends Component {
                     {errors && errors.facebookError && <Alert bsStyle="danger">{errors.facebookError}</Alert>}
                     <FacebookLogin
                         appId={FACEBOOK_API_ID}
+                        textButton="Login with Facebook"
                         autoLoad={false}
                         size="small"
                         fields="name,email"
@@ -128,6 +129,8 @@ export default class Login extends Component {
                         cssClass="facebook-login"
                         callback={this._responseFacebook}
                         authType="rerequest"
+                        isMobile={true}
+                        disableMobileRedirect={true}
                     />
                 </Col>
                 <Clearfix/>
