@@ -13,6 +13,7 @@ const extractTextPluginOptions = {
 module.exports = (env, options) => {
     return {
         bail: true,
+        devtool: options.mode === 'production' ? 'source-map' : false,
         entry: [
             'babel-polyfill',
             './src/index.js'
@@ -46,39 +47,32 @@ module.exports = (env, options) => {
                                 Object.assign(
                                     {
                                         fallback: {
-                                            loader: 'style-loader',
-                                            options: {
-                                                hmr: false
-                                            }
+                                            loader: 'style-loader'
                                         },
                                         use: [
                                             {
                                                 loader: 'css-loader',
                                                 options: {
+                                                    sourceMap: options.mode === 'production',
                                                     importLoaders: 1,
-                                                    minimize: true,
-                                                    sourceMap: options.mode === 'production'
+                                                    minimize: true
                                                 }
-                                            },
-                                            {
-                                                loader: "sass-loader"
                                             },
                                             {
                                                 loader: 'postcss-loader',
                                                 options: {
+                                                    sourceMap: options.mode === 'production',
                                                     ident: 'postcss',
                                                     plugins: () => [
                                                         require('postcss-flexbugs-fixes'),
-                                                        autoprefixer({
-                                                            browsers: [
-                                                                '>1%',
-                                                                'last 4 versions',
-                                                                'Firefox ESR',
-                                                                'not ie < 9'
-                                                            ],
-                                                            flexbox: 'no-2009'
-                                                        })
+                                                        autoprefixer('last 2 versions')
                                                     ]
+                                                }
+                                            },
+                                            {
+                                                loader: "sass-loader",
+                                                options: {
+                                                    sourceMap: options.mode === 'production'
                                                 }
                                             }
                                         ]
@@ -108,19 +102,23 @@ module.exports = (env, options) => {
             ]
         },
         plugins: [
-            new CleanWebpackPlugin([
-                'public/resources',
-                'public/css',
-                'public/js',
-                'public/*.*'
-            ], {
-                exclude: ['.htaccess']
-            }),
+            ... options.mode === 'production' ? [
+                new CleanWebpackPlugin([
+                    'public/resources',
+                    'public/css',
+                    'public/js',
+                    'public/*.*'
+                ], {
+                    exclude: ['.htaccess']
+                })] : [],
             new HtmlWebPackPlugin({
                 title: 'React start app',
                 favicon: 'src/favicon.ico',
                 hash: true,
                 template: "./src/index.html",
+                inject: true,
+                sourceMap: options.mode === 'production',
+                chunksSortMode: 'dependency',
                 minify: {
                     removeComments: true,
                     collapseWhitespace: true,
@@ -135,6 +133,8 @@ module.exports = (env, options) => {
                 }
             }),
             new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
                 sourceMap: options.mode === 'production'
             }),
             new ExtractTextPlugin({
