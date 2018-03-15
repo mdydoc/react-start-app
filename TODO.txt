@@ -1,0 +1,6 @@
+facebook login token to backend
+unit testing
+forgot password
+user token add agent info
+add languages switch
+move translations to json and make editable

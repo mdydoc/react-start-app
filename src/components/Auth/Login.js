@@ -48,7 +48,7 @@ export default class Login extends Component {
             let facebookError = '';
             if (response) {
                 if (response.hasOwnProperty('status')) {
-                    facebookError = 'You cancel facebook login!';
+                    facebookError = 'You canceled facebook login!';
                 } else {
                     facebookError = 'You did not authorize all requirements!';
                 }
