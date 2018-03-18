@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {Link} from 'react-router-dom';
 import {connect} from "react-redux";
-import userActions from "../../actions/Auth/user";
+import userActions from "../../actions/user";
 import {bindActionCreators} from "redux";
 import autobind from 'autobind-decorator';
 import {Modal, Col, Row, Clearfix} from 'react-bootstrap';
@@ -9,6 +9,7 @@ import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 
 import trans from '../../libs/translate';
+import ForgotPassword from "../Auth/ForgotPassword";
 
 @connect(
     store => ({
@@ -23,15 +24,18 @@ export default class Header extends Component {
         super(props);
 
         this.state = {
-            showloginModal: false,
-            loginForm: true
+            showAuthModal: false,
+            loginForm: true,
+            registerForm: false,
+            forgotForm: false,
+            forgotConfirmForm: false
         };
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.user) {
             this.setState({
-                showloginModal: false
+                showAuthModal: false
             });
         }
     }
@@ -39,7 +43,7 @@ export default class Header extends Component {
     @autobind
     _openLoginModal() {
         this.setState({
-            showloginModal: true
+            showAuthModal: true
         });
     }
 
@@ -48,7 +52,7 @@ export default class Header extends Component {
         const {setUserErrors} = this.props;
 
         this.setState({
-            showloginModal: false
+            showAuthModal: false
         });
 
         setUserErrors(false);
@@ -59,7 +63,9 @@ export default class Header extends Component {
         const {setUserErrors} = this.props;
 
         this.setState({
-            loginForm: false
+            loginForm: false,
+            registerForm: true,
+            forgotForm: false
         });
 
         setUserErrors(false);
@@ -70,7 +76,22 @@ export default class Header extends Component {
         const {setUserErrors} = this.props;
 
         this.setState({
-            loginForm: true
+            loginForm: true,
+            registerForm: false,
+            forgotForm: false
+        });
+
+        setUserErrors(false);
+    }
+
+    @autobind
+    _goToForgot() {
+        const {setUserErrors} = this.props;
+
+        this.setState({
+            loginForm: false,
+            registerForm: false,
+            forgotForm: true
         });
 
         setUserErrors(false);
@@ -78,7 +99,9 @@ export default class Header extends Component {
 
     render() {
         const {user} = this.props;
-        const {showloginModal, loginForm} = this.state;
+        const {showAuthModal, loginForm, registerForm, forgotForm} = this.state;
+
+        let modalTitle = loginForm ? 'Login' : registerForm ? 'Register' : forgotForm ? 'Forgot password' : '';
 
         return (
             <header>
@@ -91,9 +114,9 @@ export default class Header extends Component {
                     {!user && <Fragment>
                         <a className="header-button" onClick={this._openLoginModal}>{trans('home.login')}</a>
                     </Fragment>}
-                    <Modal show={showloginModal} onHide={this._closeLoginModal}>
+                    <Modal show={showAuthModal} onHide={this._closeLoginModal}>
                         <Modal.Header closeButton>
-                            <Modal.Title>{loginForm ? 'Login' : 'Register'}</Modal.Title>
+                            <Modal.Title>{modalTitle}</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
                             {loginForm &&
@@ -101,17 +124,31 @@ export default class Header extends Component {
                                 <Login/>
                                 <hr/>
                                 <Col xs={12} className="info">
-                                    You don't have an account? Go to <a onClick={this._goToRegister}>{trans('home.register')}</a>
+                                    You don't have an account? Go to <a
+                                    onClick={this._goToRegister}>{trans('home.register')}</a>
+                                </Col>
+                                <Col xs={12} className="info">
+                                    Forgot your password? chick <a onClick={this._goToForgot}>here</a>.
                                 </Col>
                                 <Clearfix/>
                             </Row>
                             }
-                            {!loginForm &&
+                            {registerForm &&
                             <Row>
                                 <Register/>
                                 <hr/>
                                 <Col xs={12} className="info">
-                                    Already have an account? Go to <a onClick={this._goToLogin}>{trans('home.login')}</a>
+                                    Already have an account? Go to <a
+                                    onClick={this._goToLogin}>{trans('home.login')}</a>
+                                </Col>
+                            </Row>
+                            }
+                            {forgotForm &&
+                            <Row>
+                                <ForgotPassword/>
+                                <hr/>
+                                <Col xs={12} className="info">
+                                    Remembered password? Go to <a onClick={this._goToLogin}>{trans('home.login')}</a>
                                 </Col>
                             </Row>
                             }

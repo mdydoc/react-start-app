@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import userActions from '../../actions/Auth/user';
+import userActions from '../../actions/user';
 
 @connect(
     store => ({

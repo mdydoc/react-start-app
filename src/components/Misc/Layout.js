@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import userActions from "../../actions/Auth/user";
+import userActions from "../../actions/user";
 
 @connect(
     store => ({

@@ -13,7 +13,7 @@ const extractTextPluginOptions = {
 module.exports = (env, options) => {
     return {
         bail: true,
-        devtool: options.mode === 'production' ? 'source-map' : false,
+        devtool: options.mode === 'production' ? 'inline-sourcemap' : false,
         entry: [
             'babel-polyfill',
             './src/index.js'
@@ -38,7 +38,7 @@ module.exports = (env, options) => {
                             exclude: /node_modules/,
                             loader: "babel-loader",
                             options: {
-                                compact: true
+                                compact: options.mode === 'production'
                             }
                         },
                         {
@@ -55,7 +55,7 @@ module.exports = (env, options) => {
                                                 options: {
                                                     sourceMap: options.mode === 'production',
                                                     importLoaders: 1,
-                                                    minimize: true
+                                                    minimize: options.mode === 'production'
                                                 }
                                             },
                                             {
@@ -86,7 +86,9 @@ module.exports = (env, options) => {
                             use: [
                                 {
                                     loader: "html-loader",
-                                    options: {minimize: true}
+                                    options: {
+                                        minimize: options.mode === 'production'
+                                    }
                                 }
                             ]
                         },
@@ -132,11 +134,12 @@ module.exports = (env, options) => {
                     minifyURLs: true
                 }
             }),
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: options.mode === 'production'
-            }),
+            ... options.mode === 'production' ? [
+                new UglifyJsPlugin({
+                    cache: options.mode === 'production',
+                    parallel: true,
+                    sourceMap: options.mode === 'production'
+                })] : [],
             new ExtractTextPlugin({
                 filename: 'css/[name].[contenthash:8].css'
             }),

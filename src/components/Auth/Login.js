@@ -5,7 +5,7 @@ import autobind from 'autobind-decorator';
 import FacebookLogin from 'react-facebook-login';
 import {Col, Clearfix, FormControl, Button, FormGroup, Alert, Checkbox} from 'react-bootstrap';
 
-import userActions from '../../actions/Auth/user';
+import userActions from '../../actions/user';
 
 import {FACEBOOK_API_ID} from '../../../constants';
 
@@ -33,12 +33,13 @@ export default class Login extends Component {
     _responseFacebook(response) {
         if (response && response.id && response.email) {
             const {loginUser} = this.props;
-            const {name, email, id} = response;
+            const {name, email, id, accessToken} = response;
 
             let credentials = {
                 email,
                 name,
-                facebookId: id
+                facebookId: id,
+                accessToken
             };
 
             loginUser(credentials);

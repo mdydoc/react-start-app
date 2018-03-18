@@ -1,4 +1,4 @@
-import {WINDOW_RESIZE} from '../../actions/Misc/responsive';
+import {WINDOW_RESIZE} from '../actions/responsive';
 
 export default (state = {
     width: window.innerWidth,

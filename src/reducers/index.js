@@ -1,11 +1,11 @@
 import {combineReducers} from 'redux';
 
-import misc from './Misc';
-import auth from './Auth';
+import responsive from './responsive';
+import user from './user';
 
 const reducers = {
-    ...misc,
-    ...auth
+    responsive,
+    user
 };
 
 export default combineReducers(reducers);

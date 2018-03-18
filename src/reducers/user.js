@@ -1,4 +1,4 @@
-import {SET_USER, SET_USER_ERRORS} from '../../actions/Auth/user';
+import {SET_USER, SET_USER_ERRORS} from '../actions/user';
 
 export default (state = {
     user: false,

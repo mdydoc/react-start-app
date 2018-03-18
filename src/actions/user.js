@@ -1,4 +1,4 @@
-import http from '../../libs/http';
+import http from '../libs/http';
 
 export const SET_USER = '@set-user';
 export const SET_USER_ERRORS = '@set-user-errors';

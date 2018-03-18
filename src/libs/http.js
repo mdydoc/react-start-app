@@ -20,12 +20,8 @@ class Http {
         return this;
     }
 
-    _getAuthConfig(withAuth) {
+    _getAuthConfig() {
         let axiosConfig = {};
-
-        if (!withAuth) {
-            return axiosConfig;
-        }
 
         const jwt = sessionStorage.getItem('jwt');
 
@@ -77,13 +73,13 @@ class Http {
         };
     }
 
-    async get(options = {}, withAuth = false) {
+    async get(options = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig(withAuth);
+        let authConfig = this._getAuthConfig();
 
         try {
             this._response = await this._axios.get(url, {
@@ -99,13 +95,13 @@ class Http {
         return this.build();
     }
 
-    async post(data = {}, withAuth = false) {
+    async post(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig(withAuth);
+        let authConfig = this._getAuthConfig();
 
         try {
             this._response = await this._axios.post(url, data, authConfig);
@@ -116,13 +112,13 @@ class Http {
         return this.build();
     }
 
-    async delete(withAuth = false) {
+    async delete() {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig(withAuth);
+        let authConfig = this._getAuthConfig();
 
         try {
             this._response = await this._axios.delete(url, authConfig);
@@ -133,13 +129,13 @@ class Http {
         return this.build();
     }
 
-    async put(data = {}, withAuth = false) {
+    async put(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig(withAuth);
+        let authConfig = this._getAuthConfig();
 
         try {
             this._response = await this._axios.put(url, data, authConfig);
@@ -150,13 +146,13 @@ class Http {
         return this.build();
     }
 
-    async patch(data = {}, withAuth = false) {
+    async patch(data = {}) {
         this._validate();
 
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig(withAuth);
+        let authConfig = this._getAuthConfig();
 
         try {
             this._response = await this._axios.patch(url, data, authConfig);

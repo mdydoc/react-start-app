@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
 import {Col, Clearfix, FormControl, Button, FormGroup, Alert} from 'react-bootstrap';
 
-import userActions from '../../actions/Auth/user';
+import userActions from '../../actions/user';
 
 @connect(
     store => ({
