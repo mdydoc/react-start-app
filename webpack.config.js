@@ -6,14 +6,27 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
+/**
+ * Extract Text Plugin Options
+ *
+ * @type {{publicPath: string}}
+ */
 const extractTextPluginOptions = {
     publicPath: Array(`css/[name].[contenthash:8].css`.split('/').length).join('../')
 };
 
+/**
+ * Webpack config
+ *
+ * @param env
+ * @param options
+ *
+ * @returns {{bail: boolean, devtool: *, entry: string[], devServer: {historyApiFallback: boolean}, module: {rules: *[]}, plugins: *[], output: {path: *, filename: string, chunkFilename: string, publicPath: string}}}
+ */
 module.exports = (env, options) => {
     return {
         bail: true,
-        devtool: options.mode === 'production' ? 'inline-sourcemap' : false,
+        devtool: options.mode === 'production' ? 'source-map' : false,
         entry: [
             'babel-polyfill',
             './src/index.js'
@@ -26,7 +39,7 @@ module.exports = (env, options) => {
                 {
                     oneOf: [
                         {
-                            test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+                            test: /\.(bmp|gif|jpe?g|png|svg)$/,
                             loader: 'url-loader',
                             options: {
                                 limit: 10000,
@@ -94,7 +107,7 @@ module.exports = (env, options) => {
                         },
                         {
                             loader: 'file-loader',
-                            exclude: [/\.jsx?$/, /\.s?css$/, /\.html$/, /\.json$/],
+                            exclude: [/\.jsx?$/, /\.s?css$/, /\.html$/],
                             options: {
                                 name: 'resources/[name].[hash:8].[ext]'
                             }

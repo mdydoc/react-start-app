@@ -1,7 +1,7 @@
 import {applyMiddleware, compose, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
-import reducers from '../src/reducers';
+import reducers from './reducers';
 
 const createAppStore = (initialState = {}) => {
     return createStore(
