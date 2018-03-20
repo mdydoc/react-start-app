@@ -37,7 +37,7 @@ export default class ForgotPassword extends Component {
             email
         };
 
-        let res = await http.call('forgot-password').post({...userDetails});
+        let res = await http.endpoint('forgot-password').post({...userDetails});
 
         if (!res.isError) {
             this.setState({
@@ -62,7 +62,7 @@ export default class ForgotPassword extends Component {
             retypePassword
         };
 
-        let res = await http.call('forgot-password').post({...userDetails});
+        let res = await http.endpoint('forgot-password').post({...userDetails});
 
         if (!res.isError) {
             sessionStorage.setItem('jwt', res.data.jwt);

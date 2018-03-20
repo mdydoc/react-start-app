@@ -1,6 +1,9 @@
-unit testing
+on forgot and register do not set user
+on register go to activation
+resend activation code
+on forgot on success go to login
 user token add agent info
 add languages switch
+loading
 move translations to json and make editable
-register activate account
-on forgot and register do not set user
+unit testing

@@ -15,7 +15,7 @@ class Http {
         }
     }
 
-    call(apiMethod) {
+    endpoint(apiMethod) {
         this._apiMethod = apiMethod;
         return this;
     }
