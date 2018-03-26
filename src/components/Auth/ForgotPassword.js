@@ -2,19 +2,7 @@ import React, {Component, Fragment} from 'react';
 import autobind from 'autobind-decorator';
 import {Col, Clearfix, FormControl, Button, FormGroup, Alert} from 'react-bootstrap';
 import http from '../../libs/http';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
 
-import userActions from '../../actions/user';
-
-@connect(
-    store => ({
-        user: store.user.user
-    }),
-    dispatch => ({
-        ...bindActionCreators(userActions, dispatch)
-    })
-)
 export default class ForgotPassword extends Component {
     constructor(props) {
         super(props);
@@ -25,7 +13,8 @@ export default class ForgotPassword extends Component {
             password: '',
             retypePassword: '',
             showCode: false,
-            errors: {}
+            errors: {},
+            isSuccess: false
         };
     }
 
@@ -53,7 +42,6 @@ export default class ForgotPassword extends Component {
 
     @autobind
     async _reset() {
-        const {setUser, setUserErrors} = this.props;
         const {code, password, retypePassword} = this.state;
 
         let userDetails = {
@@ -65,9 +53,10 @@ export default class ForgotPassword extends Component {
         let res = await http.endpoint('forgot-password').post({...userDetails});
 
         if (!res.isError) {
-            sessionStorage.setItem('jwt', res.data.jwt);
-            setUser(res.data.user);
-            setUserErrors(false);
+            this.setState({
+                isSuccess: true,
+                errors: {}
+            });
         } else {
             this.setState({
                 errors: res.errorMessage

@@ -26,24 +26,6 @@ export const loginUser = (payload = {}) => {
     };
 };
 
-export const registerUser = (payload = {}) => {
-    return async (dispatch) => {
-        try {
-            const res = await http.endpoint('register').post({...payload});
-
-            if (!res.isError) {
-                sessionStorage.setItem('jwt', res.data.jwt);
-                dispatch(setUser(res.data.user));
-                dispatch(setUserErrors(false));
-            } else {
-                dispatch(setUserErrors(res.errorMessage));
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    };
-};
-
 export const logoutUser = () => {
     return async (dispatch) => {
         try {
@@ -86,7 +68,6 @@ export const setUserErrors = (payload) => {
 
 export default {
     loginUser,
-    registerUser,
     logoutUser,
     setUser,
     setUserErrors

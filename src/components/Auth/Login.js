@@ -3,7 +3,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import autobind from 'autobind-decorator';
 import FacebookLogin from 'react-facebook-login';
-import {Col, Clearfix, FormControl, Button, FormGroup, Alert, Checkbox} from 'react-bootstrap';
+import {Col, Clearfix, FormControl, Button, FormGroup, Alert, Checkbox, ControlLabel} from 'react-bootstrap';
+import uniqueId from 'react-html-id';
 
 import userActions from '../../actions/user';
 
@@ -22,10 +23,13 @@ export default class Login extends Component {
     constructor(props) {
         super(props);
 
+        uniqueId.enableUniqueIds(this);
+
         this.state = {
             email: '',
             password: '',
-            remember: true
+            remember: true,
+            activateEmail: false
         };
     }
 
@@ -41,7 +45,6 @@ export default class Login extends Component {
                 facebookId: id,
                 accessToken
             };
-
             loginUser(credentials);
         } else {
             const {setUserErrors} = this.props;
@@ -69,10 +72,18 @@ export default class Login extends Component {
         let credentials = {
             email,
             password,
-            remember
+            remember,
+            os: 'Win',
+            ip: '192.168.0.1',
+            device: 'Desktop',
+            browser: 'Firefox'
         };
 
         loginUser(credentials);
+
+        this.setState({
+            activateEmail: email
+        });
     }
 
     @autobind
@@ -93,6 +104,13 @@ export default class Login extends Component {
         });
     }
 
+    @autobind
+    _goToActivate() {
+        const {goToActivate} = this.props;
+
+        goToActivate(this.state.activateEmail);
+    }
+
     render() {
         const {email, password, remember} = this.state;
         const {errors} = this.props;
@@ -101,13 +119,19 @@ export default class Login extends Component {
             <Fragment>
                 <Col xs={12}>
                     {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
-                    <FormGroup>
-                        {errors && errors.email && <Alert bsStyle="danger">{errors.email}</Alert>}
+                    {errors && errors.error && errors.error === 'error.account_not_activated' &&
+                    <div className="info">
+                        Click <a onClick={this._goToActivate}>here</a> to activate your account.
+                    </div>}
+                    <FormGroup controlId={this.nextUniqueId()}
+                               validationState={errors && errors.email ? 'error' : null}>
+                        <ControlLabel>Email{errors && errors.email && ` (${errors.email})`}: </ControlLabel>
                         <FormControl type="text" name="email" placeholder="email" value={email}
                                      onChange={this._handleChange}/>
                     </FormGroup>
-                    <FormGroup>
-                        {errors && errors.password && <Alert bsStyle="danger">{errors.password}</Alert>}
+                    <FormGroup controlId={this.nextUniqueId()}
+                               validationState={errors && errors.password ? 'error' : null}>
+                        <ControlLabel>Password{errors && errors.password && ` (${errors.password})`}: </ControlLabel>
                         <FormControl type="password" name="password" placeholder="password" value={password}
                                      onChange={this._handleChange}/>
                     </FormGroup>

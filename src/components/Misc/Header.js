@@ -28,7 +28,9 @@ export default class Header extends Component {
             loginForm: true,
             registerForm: false,
             forgotForm: false,
-            forgotConfirmForm: false
+            forgotConfirmForm: false,
+            registerActivate: false,
+            email: false
         };
     }
 
@@ -65,7 +67,9 @@ export default class Header extends Component {
         this.setState({
             loginForm: false,
             registerForm: true,
-            forgotForm: false
+            forgotForm: false,
+            registerActivate: false,
+            email: null
         });
 
         setUserErrors(false);
@@ -97,9 +101,24 @@ export default class Header extends Component {
         setUserErrors(false);
     }
 
+    @autobind
+    _goToActivate(email) {
+        const {setUserErrors} = this.props;
+
+        this.setState({
+            loginForm: false,
+            registerForm: true,
+            forgotForm: false,
+            registerActivate: true,
+            email: email
+        });
+
+        setUserErrors(false);
+    }
+
     render() {
         const {user} = this.props;
-        const {showAuthModal, loginForm, registerForm, forgotForm} = this.state;
+        const {showAuthModal, loginForm, registerForm, forgotForm, registerActivate} = this.state;
 
         let modalTitle = loginForm ? 'Login' : registerForm ? 'Register' : forgotForm ? 'Forgot password' : '';
 
@@ -121,7 +140,7 @@ export default class Header extends Component {
                         <Modal.Body>
                             {loginForm &&
                             <Row>
-                                <Login/>
+                                <Login goToActivate={this._goToActivate}/>
                                 <hr/>
                                 <Col xs={12} className="info">
                                     You don't have an account? Go to <a
@@ -135,7 +154,7 @@ export default class Header extends Component {
                             }
                             {registerForm &&
                             <Row>
-                                <Register/>
+                                <Register registerActivate={registerActivate} email={this.state.email}/>
                                 <hr/>
                                 <Col xs={12} className="info">
                                     Already have an account? Go to <a

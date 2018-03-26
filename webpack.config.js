@@ -21,7 +21,7 @@ const extractTextPluginOptions = {
  * @param env
  * @param options
  *
- * @returns {{bail: boolean, devtool: *, entry: string[], devServer: {historyApiFallback: boolean}, module: {rules: *[]}, plugins: *[], output: {path: *, filename: string, chunkFilename: string, publicPath: string}}}
+ * @returns {{bail: boolean, devtool: *, entry: string[], devServer: {overlay: boolean, historyApiFallback: boolean, port: number}, module: {rules: *[]}, plugins: *[], output: {path: *, filename: string, chunkFilename: string, publicPath: string}}}
  */
 module.exports = (env, options) => {
     return {
@@ -32,18 +32,21 @@ module.exports = (env, options) => {
             './src/index.js'
         ],
         devServer: {
-            historyApiFallback: true
+            overlay: true,
+            historyApiFallback: true,
+            port: 8080
+            // https: true
         },
         module: {
             rules: [
                 {
                     oneOf: [
                         {
-                            test: /\.(bmp|gif|jpe?g|png|svg)$/,
+                            test: /\.(bmp|gif|jpe?g|png)$/,
                             loader: 'url-loader',
                             options: {
-                                limit: 10000,
-                                name: 'resources/[name].[hash:8].[ext]'
+                                limit: 5000,
+                                name: 'media/[name].[hash:8].[ext]'
                             }
                         },
                         {
@@ -107,7 +110,7 @@ module.exports = (env, options) => {
                         },
                         {
                             loader: 'file-loader',
-                            exclude: [/\.jsx?$/, /\.s?css$/, /\.html$/],
+                            exclude: [/\.jsx?$/, /\.s?css$/, /\.html$/, /\.json$/],
                             options: {
                                 name: 'resources/[name].[hash:8].[ext]'
                             }
@@ -120,6 +123,7 @@ module.exports = (env, options) => {
             ... options.mode === 'production' ? [
                 new CleanWebpackPlugin([
                     'public/resources',
+                    'public/media',
                     'public/css',
                     'public/js',
                     'public/*.*'
