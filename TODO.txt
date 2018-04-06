@@ -10,3 +10,4 @@ unit testing
 seo
 meta tags
 content
+move config to env
