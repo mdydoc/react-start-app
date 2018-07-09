@@ -36,6 +36,7 @@ module.exports = (env, options) => {
       overlay: true,
       historyApiFallback: true,
       port: 8080,
+      https: true,
       stats: {
         cached: false,
         cachedAssets: false,
