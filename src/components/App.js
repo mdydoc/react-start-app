@@ -4,13 +4,18 @@ import Router from '../router';
 import store from '../store';
 
 import {onResize} from '../actions/responsive';
+import {getTranslation} from '../actions/translation';
 
 export default class App extends Component {
     componentDidMount() {
-        window.addEventListener('resize', this._onResize);
+        const lang = localStorage.getItem('lang') || process.env.DEFAULT_LANG;
+
+        store.dispatch(getTranslation(lang));
+
+        window.addEventListener('resize', App._onResize);
     }
 
-    _onResize() {
+    static _onResize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
 

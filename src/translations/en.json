@@ -1,0 +1,42 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "emailPlaceholder": "Email...",
+    "password": "Password",
+    "passwordPlaceholder": "Password...",
+    "rememberMe": "Remember",
+    "submit": "Login",
+    "forgotPassword": "Forgot password?",
+    "register": "Create account"
+  },
+  "forgotPassword": {
+    "title": "Login",
+    "email": "Email",
+    "emailPlaceholder": "Email...",
+    "submit": "Reset password",
+    "login": "Login",
+    "haveACode": "Have a code?",
+    "code": "Code",
+    "codePlaceholder": "Code...",
+    "password": "Password",
+    "passwordPlaceholder": "Password...",
+    "submitCode": "Change password",
+    "tryAgain": "No email? Try again"
+  },
+  "register": {
+    "title": "Login",
+    "name": "Name",
+    "namePlaceholder": "Name...",
+    "email": "Email",
+    "emailPlaceholder": "Email...",
+    "password": "Password",
+    "passwordPlaceholder": "Password...",
+    "rememberMe": "Remember",
+    "submit": "Register",
+    "login": "Login",
+    "code": "Code",
+    "codePlaceholder": "Code...",
+    "submitCode": "Activate account"
+  }
+}

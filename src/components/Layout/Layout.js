@@ -1,18 +1,8 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import Header from "./Header";
+import {Container} from "reactstrap";
 import Footer from "./Footer";
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import userActions from "../../actions/user";
 
-@connect(
-    store => ({
-        user: store.user.user
-    }),
-    dispatch => ({
-        ...bindActionCreators(userActions, dispatch)
-    })
-)
 export default class Layout extends Component {
     constructor(props) {
         super(props);
@@ -32,14 +22,13 @@ export default class Layout extends Component {
 
     render() {
         return (
-            <Fragment>
+            <Container fluid={true} className={'layout'}>
                 <Header/>
-                <div className="container">
-                    <div className="content">{this.props.children}</div>
+                <div className={'content'}>
+                    {this.props.children}
                 </div>
                 <Footer/>
-            </Fragment>
-
+            </Container>
         );
     }
 }

@@ -1,14 +1,22 @@
-import translation from '../translations';
-import {DEFAULT_LANG} from "../../constants";
+import store from '../store';
 
-const lang = localStorage.getItem('lang') || DEFAULT_LANG;
+const _resolve = (path, obj) => {
+    let lastPath = path.split('.').slice(-1)[0];
 
-export default function trans(key) {
-    return resolve(key, translation[lang]);
-}
-
-function resolve(path, obj) {
     return path.split('.').reduce(function (prev, curr) {
+        if (lastPath === curr && typeof prev[curr] === 'object') {
+            return path;
+        }
         return prev ? typeof prev[curr] !== 'undefined' ? prev[curr] : path : path;
     }, obj || self);
+};
+
+export default function (key) {
+    let translation = store.getState().translation;
+
+    if (Object.keys(translation).length > 0) {
+        return _resolve(key, translation);
+    }
+
+    return key;
 }

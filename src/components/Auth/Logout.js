@@ -16,20 +16,22 @@ export default class Logout extends Component {
     constructor(props) {
         super(props);
 
-        const jwt = sessionStorage.getItem('jwt');
+        if (!props.user) {
+            props.history.push("/login");
+        } else {
+            const {logoutUser} = props;
 
-        if (!jwt) {
-            this.props.history.push("/");
+            logoutUser();
         }
-
-        const {logoutUser} = this.props;
-
-        logoutUser();
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (!nextProps.user) {
-            this.props.history.push("/");
+    componentDidUpdate() {
+        if (!this.props.user) {
+            this.props.history.push("/login");
+        } else {
+            const {logoutUser} = this.props;
+
+            logoutUser();
         }
     }
 

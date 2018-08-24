@@ -1,10 +1,18 @@
 import axios from 'axios';
-import {API_URL} from '../../constants';
+import qs from 'qs';
+import translate from '../libs/translate';
 
 class Http {
     constructor() {
+        axios.defaults.headers.patch['Content-Type'] = 'application/x-www-form-urlencoded';
+        axios.interceptors.request.use((request) => {
+            if (request.data && request.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
+                request.data = qs.stringify(request.data);
+            }
+            return request;
+        });
         this._axios = axios.create({});
-        this._url = API_URL;
+        this._url = process.env.API_URL;
         this._apiMethod = false;
         this._response = false;
     }
@@ -15,12 +23,12 @@ class Http {
         }
     }
 
-    endpoint(apiMethod) {
+    route(apiMethod) {
         this._apiMethod = apiMethod;
         return this;
     }
 
-    _getAuthConfig() {
+    static _getAuthConfig() {
         let axiosConfig = {};
 
         const jwt = sessionStorage.getItem('jwt');
@@ -41,24 +49,26 @@ class Http {
         let isError = false;
         let errorMessage = {};
         let data = false;
+        let pagination = false;
 
         if (response) {
             if (response.responseType && response.responseType === 'success') {
-                data = response.data;
+                data = response.data.result;
+                pagination = response.data.pagination !== null ? response.data.pagination : false;
             } else {
                 isError = true;
                 if (typeof response.errorMessage === 'object') {
                     for (let error in response.errorMessage) {
                         if (response.errorMessage.hasOwnProperty(error)) {
                             if (Array.isArray(response.errorMessage[error])) {
-                                errorMessage = {...errorMessage, [error]: response.errorMessage[error][0]};
+                                errorMessage = {...errorMessage, [error]: translate(response.errorMessage[error][0])};
                             } else {
-                                errorMessage = {...errorMessage, [error]: response.errorMessage[error]};
+                                errorMessage = {...errorMessage, [error]: translate(response.errorMessage[error])};
                             }
                         }
                     }
                 } else {
-                    errorMessage = {error: response.errorMessage};
+                    errorMessage = {error: translate(response.errorMessage)};
                 }
             }
         } else {
@@ -69,7 +79,8 @@ class Http {
         return {
             isError,
             errorMessage,
-            data
+            data,
+            pagination
         };
     }
 
@@ -79,7 +90,7 @@ class Http {
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig();
+        let authConfig = Http._getAuthConfig();
 
         try {
             this._response = await this._axios.get(url, {
@@ -101,7 +112,7 @@ class Http {
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig();
+        let authConfig = Http._getAuthConfig();
 
         try {
             this._response = await this._axios.post(url, data, authConfig);
@@ -118,7 +129,7 @@ class Http {
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig();
+        let authConfig = Http._getAuthConfig();
 
         try {
             this._response = await this._axios.delete(url, authConfig);
@@ -135,7 +146,7 @@ class Http {
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig();
+        let authConfig = Http._getAuthConfig();
 
         try {
             this._response = await this._axios.put(url, data, authConfig);
@@ -152,7 +163,7 @@ class Http {
         let url = `${this._url}/${this._apiMethod}`;
         this._apiMethod = false;
 
-        let authConfig = this._getAuthConfig();
+        let authConfig = Http._getAuthConfig();
 
         try {
             this._response = await this._axios.patch(url, data, authConfig);

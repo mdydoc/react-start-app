@@ -1,135 +1,99 @@
 import React, {Component, Fragment} from 'react';
-import autobind from 'autobind-decorator';
-import {Col, Clearfix, FormControl, Button, FormGroup, Alert} from 'react-bootstrap';
-import http from '../../libs/http';
+import AuthCard from "../Misc/AuthCard";
+import translate from "../../libs/translate";
+import {Button, FormGroup, Input, Label} from "reactstrap";
+import uniqueId from 'react-html-id';
+import {Link} from 'react-router-dom';
+import http from "../../libs/http";
 
 export default class ForgotPassword extends Component {
     constructor(props) {
         super(props);
 
+        uniqueId.enableUniqueIds(this);
+
         this.state = {
+            showCode: false,
             email: '',
             code: '',
-            password: '',
-            retypePassword: '',
-            showCode: false,
-            errors: {},
-            isSuccess: false
+            password: ''
         };
     }
 
-    @autobind
-    async _forgot() {
+    _onChange = e => {
+        const {name, value} = e.target;
+
+        this.setState({
+            [name]: value
+        });
+    };
+
+    _changeRender = (showCode) => {
+        this.setState({
+            showCode
+        });
+    };
+
+    _forgot = async () => {
         const {email} = this.state;
 
-        let userDetails = {
+        let data = {
             email
         };
 
-        let res = await http.endpoint('forgot-password').post({...userDetails});
+        let res = await http.route('forgot-password').post(data);
 
-        if (!res.isError) {
-            this.setState({
-                showCode: true,
-                errors: {}
-            });
-        } else {
-            this.setState({
-                errors: res.errorMessage
-            });
-        }
-    }
+        console.log(res);
+    };
 
-    @autobind
-    async _reset() {
-        const {code, password, retypePassword} = this.state;
+    _change = async () => {
+        const {code, password} = this.state;
 
-        let userDetails = {
+        let data = {
             code,
-            password,
-            retypePassword
+            password
         };
 
-        let res = await http.endpoint('forgot-password').post({...userDetails});
+        let res = await http.route('change-password').post(data);
 
-        if (!res.isError) {
-            this.setState({
-                isSuccess: true,
-                errors: {}
-            });
-        } else {
-            this.setState({
-                errors: res.errorMessage
-            });
-        }
-    }
-
-    @autobind
-    _handleChange(e) {
-        const {name, value} = e.target;
-        this.setState({[name]: value});
-    }
-
-    @autobind
-    _setShowCode() {
-        const {showCode} = this.state;
-
-        this.setState({
-            showCode: !showCode
-        });
-    }
+        console.log(res);
+    };
 
     _renderMain() {
-        const {email, errors} = this.state;
+        const {email} = this.state;
 
         return (
             <Fragment>
-                <Col md={12}>
-                    {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
-                    <FormGroup>
-                        {errors && errors.email && <Alert bsStyle="danger">{errors.email}</Alert>}
-                        <FormControl type="email" name="email" placeholder="email" value={email}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <Button className="button" onClick={this._forgot}>Reset password</Button>
-                </Col>
-                <Col xs={12} className="info">
-                    Have a code? Click <a onClick={this._setShowCode}>here</a>
-                </Col>
-                <Clearfix/>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('forgotPassword.email')}</Label>
+                    <Input type="email" name="email" value={email} id={this.lastUniqueId()}
+                           placeholder={translate('forgotPassword.emailPlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <Button onClick={this._forgot}>{translate('forgotPassword.submit')}</Button>
+                <Link to={'login'}>{translate('forgotPassword.login')}</Link>
+                <span onClick={() => this._changeRender(true)}>{translate('forgotPassword.haveACode')}</span>
             </Fragment>
         );
     }
 
     _renderCode() {
-        const {code, errors, password, retypePassword} = this.state;
+        const {code, password} = this.state;
 
         return (
             <Fragment>
-                <Col md={12}>
-                    {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
-                    <FormGroup>
-                        {errors && errors.code && <Alert bsStyle="danger">{errors.code}</Alert>}
-                        <FormControl type="text" name="code" placeholder="code" value={code}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <FormGroup>
-                        {errors && errors.password && <Alert bsStyle="danger">{errors.password}</Alert>}
-                        <FormControl type="password" name="password" placeholder="password" value={password}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <FormGroup>
-                        {errors && errors.retypePassword && <Alert bsStyle="danger">{errors.retypePassword}</Alert>}
-                        <FormControl type="password" name="retypePassword" placeholder="retype password"
-                                     value={retypePassword}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <Button className="button" onClick={this._reset}>Change password</Button>
-                </Col>
-                <Col xs={12} className="info">
-                    Didn't receive a code? Click <a onClick={this._setShowCode}>here</a> to try again.
-                </Col>
-                <Clearfix/>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('forgotPassword.code')}</Label>
+                    <Input type="text" name="code" value={code} id={this.lastUniqueId()}
+                           placeholder={translate('forgotPassword.codePlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('forgotPassword.password')}</Label>
+                    <Input type="password" name="password" value={password} id={this.lastUniqueId()}
+                           placeholder={translate('forgotPassword.passwordPlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <Button onClick={this._change}>{translate('forgotPassword.submitCode')}</Button>
+                <Link to={'login'}>{translate('forgotPassword.login')}</Link>
+                <span onClick={() => this._changeRender(false)}>{translate('forgotPassword.tryAgain')}</span>
             </Fragment>
         );
     }
@@ -138,10 +102,10 @@ export default class ForgotPassword extends Component {
         const {showCode} = this.state;
 
         return (
-            <Fragment>
+            <AuthCard title={translate('forgotPassword.title')}>
                 {!showCode && this._renderMain()}
                 {showCode && this._renderCode()}
-            </Fragment>
+            </AuthCard>
         );
     }
 }

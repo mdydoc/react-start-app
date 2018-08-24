@@ -6,7 +6,7 @@ export const SET_USER_ERRORS = '@set-user-errors';
 export const loginUser = (payload = {}) => {
     return async (dispatch) => {
         try {
-            const res = await http.endpoint('login').post({...payload});
+            const res = await http.route('login').post({...payload});
 
             if (!res.isError) {
                 sessionStorage.setItem('jwt', res.data.jwt);
@@ -37,7 +37,7 @@ export const logoutUser = () => {
                 logoutParams = Object.assign({}, {rememberToken});
             }
 
-            const res = await http.endpoint('logout').post(logoutParams, true);
+            const res = await http.route('logout').post(logoutParams, true);
 
             if (!res.isError) {
                 sessionStorage.clear();
@@ -59,6 +59,23 @@ export const setUser = (payload) => {
     };
 };
 
+export const getUser = () => {
+    return async (dispatch) => {
+        try {
+            const res = await http.route('user').get();
+
+            if (!res.isError) {
+                dispatch(setUser(res.data));
+                dispatch(setUserErrors(false));
+            } else {
+                dispatch(setUserErrors(res.errorMessage));
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+};
+
 export const setUserErrors = (payload) => {
     return {
         payload,
@@ -70,5 +87,6 @@ export default {
     loginUser,
     logoutUser,
     setUser,
+    getUser,
     setUserErrors
 };

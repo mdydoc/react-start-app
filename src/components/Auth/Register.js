@@ -1,8 +1,10 @@
 import React, {Component, Fragment} from 'react';
-import autobind from 'autobind-decorator';
-import {Col, Clearfix, FormControl, Button, FormGroup, Alert, ControlLabel} from 'react-bootstrap';
-import http from '../../libs/http';
+import AuthCard from "../Misc/AuthCard";
+import translate from "../../libs/translate";
+import {Button, FormGroup, Input, Label} from "reactstrap";
 import uniqueId from 'react-html-id';
+import {Link} from 'react-router-dom';
+import http from "../../libs/http";
 
 export default class Register extends Component {
     constructor(props) {
@@ -11,150 +13,98 @@ export default class Register extends Component {
         uniqueId.enableUniqueIds(this);
 
         this.state = {
+            showCode: false,
             name: '',
-            email: props.email,
+            email: '',
             password: '',
-            retypePassword: '',
-            code: '',
-            showCode: props.registerActivate,
-            errors: {}
+            code: ''
         };
     }
 
-    @autobind
-    async _register() {
-        const {name, email, password, retypePassword} = this.state;
+    _onChange = e => {
+        const {name, value} = e.target;
 
-        let userDetails = {
+        this.setState({
+            [name]: value
+        });
+    };
+
+    _register = async () => {
+        const {name, email, password} = this.state;
+
+        let data = {
             name,
             email,
-            password,
-            retypePassword
+            password
         };
 
-        let res = await http.endpoint('register').post({...userDetails});
+        let res = await http.route('register').post(data);
 
-        if (!res.isError) {
-            this.setState({
-                showCode: true,
-                errors: {}
-            });
-        } else {
-            this.setState({
-                errors: res.errorMessage
-            });
-        }
-    }
+        console.log(res);
+    };
 
-    @autobind
-    async _activateAccount() {
-        const {code, email} = this.state;
+    _activate = async () => {
+        const {code} = this.state;
 
-        let userDetails = {
-            code,
-            email
+        let data = {
+            code
         };
 
-        let res = await http.endpoint('activate').post({...userDetails});
+        let res = await http.route('activate-account').post(data);
 
-        if (!res.isError) {
-            this.setState({
-                isSuccess: true,
-                errors: {}
-            });
-        } else {
-            this.setState({
-                errors: res.errorMessage
-            });
-        }
-    }
+        console.log(res);
+    };
 
-    @autobind
-    async _resendCode() {
+    _resend = async () => {
         const {email} = this.state;
 
-        let userDetails = {
+        let data = {
             email
         };
 
-        let res = await http.endpoint('resend').post({...userDetails});
+        let res = await http.route('resend-code').post(data);
 
-        if (!res.isError) {
-            this.setState({
-                isSuccess: true,
-                errors: {}
-            });
-        } else {
-            this.setState({
-                errors: res.errorMessage
-            });
-        }
-    }
-
-    @autobind
-    _handleChange(e) {
-        const {name, value} = e.target;
-        this.setState({[name]: value});
-    }
+        console.log(res);
+    };
 
     _renderMain() {
-        const {name, email, password, retypePassword, errors} = this.state;
+        const {name, email, password} = this.state;
 
         return (
             <Fragment>
-                <Col md={12}>
-                    {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
-                    <FormGroup controlId={this.nextUniqueId()}
-                               validationState={errors && errors.email ? 'error' : null}>
-                        {errors && errors.name && <Alert bsStyle="danger">{errors.name}</Alert>}
-                        <FormControl type="text" name="name" placeholder="name" value={name}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <FormGroup controlId={this.nextUniqueId()}
-                               validationState={errors && errors.email ? 'error' : null}>
-                        {errors && errors.email && <Alert bsStyle="danger">{errors.email}</Alert>}
-                        <FormControl type="email" name="email" placeholder="email" value={email}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <FormGroup controlId={this.nextUniqueId()}
-                               validationState={errors && errors.email ? 'error' : null}>
-                        {errors && errors.password && <Alert bsStyle="danger">{errors.password}</Alert>}
-                        <FormControl type="password" name="password" placeholder="password" value={password}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <FormGroup controlId={this.nextUniqueId()}
-                               validationState={errors && errors.email ? 'error' : null}>
-                        {errors && errors.retypePassword && <Alert bsStyle="danger">{errors.retypePassword}</Alert>}
-                        <FormControl type="password" name="retypePassword" placeholder="retype password"
-                                     value={retypePassword}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <Button className="button" onClick={this._register}>Register</Button>
-                </Col>
-                <Clearfix/>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('register.name')}</Label>
+                    <Input type="text" name="name" value={name} id={this.lastUniqueId()}
+                           placeholder={translate('register.namePlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('register.email')}</Label>
+                    <Input type="email" name="email" value={email} id={this.lastUniqueId()}
+                           placeholder={translate('register.emailPlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('register.password')}</Label>
+                    <Input type="password" name="password" value={password} id={this.lastUniqueId()}
+                           placeholder={translate('register.passwordPlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <Button onClick={this._register}>{translate('register.submit')}</Button>
+                <Link to={'login'}>{translate('register.login')}</Link>
             </Fragment>
         );
     }
 
     _renderCode() {
-        const {code, errors} = this.state;
+        const {code} = this.state;
 
         return (
             <Fragment>
-                <Col md={12}>
-                    {errors && errors.error && <Alert bsStyle="danger">{errors.error}</Alert>}
-                    <FormGroup controlId={this.nextUniqueId()}
-                               validationState={errors && errors.code ? 'error' : null}>
-                        <ControlLabel>Activation code{errors && errors.code && ` (${errors.code})`}: </ControlLabel>
-                        <FormControl type="text" name="code" placeholder="code" value={code}
-                                     onChange={this._handleChange}/>
-                    </FormGroup>
-                    <Button className="button" onClick={this._activateAccount}>Activate account</Button>
-                </Col>
-                <Col xs={12} className="info">
-                    Didn't receive a code? Click <a onClick={this._resendCode}>here</a> to resend.
-                </Col>
-                <Clearfix/>
+                <FormGroup>
+                    <Label for={this.nextUniqueId()}>{translate('register.code')}</Label>
+                    <Input type="text" name="code" value={code} id={this.lastUniqueId()}
+                           placeholder={translate('register.codePlaceholder')} onChange={this._onChange}/>
+                </FormGroup>
+                <Button onClick={this._activate}>{translate('register.submitCode')}</Button>
+                <Link to={'login'}>{translate('register.login')}</Link>
             </Fragment>
         );
     }
@@ -163,10 +113,10 @@ export default class Register extends Component {
         const {showCode} = this.state;
 
         return (
-            <Fragment>
+            <AuthCard title={translate('register.title')}>
                 {!showCode && this._renderMain()}
                 {showCode && this._renderCode()}
-            </Fragment>
+            </AuthCard>
         );
     }
 }

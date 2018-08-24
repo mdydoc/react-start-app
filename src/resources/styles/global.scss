@@ -1,74 +1,16 @@
-html, body {
-  width: 100%;
-  min-height: 100%;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 11pt;
-}
-
-a {
-  color: #228b22;
-
-  &:hover, &:visited, &:focus, &:active {
-    text-decoration: none;
-  }
-}
-
-hr {
-  margin: 10px 0;
-}
-
-header {
-  height: 80px;
-}
-
-footer {
-  background: #adebad;
-  line-height: 30px;
-  text-align: center;
-}
-
-.button {
-  display: block;
-  background: #228b22;
-  color: #fff;
-  padding: 5px 10px;
-  font-size: 14px;
+.auth-card {
+  width: 95%;
+  max-width: 450px;
+  margin: 5% auto 0;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  &:hover {
-    background: #145214;
+  padding: 20px;
+
+  .auth-card-title {
+    font-size: 20px;
   }
-}
 
-.header-button {
-  display: block;
-  background: #228b22;
-  color: #fff;
-  padding: 5px 10px;
-  font-size: 14px;
-  border-radius: 5px;
-  float: right;
-  margin-top: 25px;
-  margin-left: 10px;
-  cursor: pointer;
-  &:hover {
-    background: #145214;
-    color: #fff;
+  .auth-card-content {
+    padding: 10px 0 0;
   }
-}
-
-.facebook-login {
-  background-color: #4c69ba;
-  color: #fff;
-  margin: 10px auto;
-  font-weight: bold;
-  border: 0 none;
-  padding: 10px;
-  display: block;
-  width: 200px;
-  text-align: center;
-  border-radius: 5px;
-}
-
-.content {
-  margin: 20px 0;
 }
