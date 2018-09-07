@@ -5,6 +5,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
 /**
@@ -143,10 +144,14 @@ module.exports = (env, options = {mode: 'production'}) => {
                     'public/media',
                     'public/css',
                     'public/js',
+                    'public/src',
                     'public/*.*'
                 ], {
                     exclude: ['.htaccess']
                 })] : [],
+            new CopyWebpackPlugin([
+                {from: 'src/translations', to: 'src/translations'}
+            ], {copyUnmodified: true}),
             new HtmlWebPackPlugin({
                 title: 'Seatbelt',
                 favicon: 'src/favicon.ico',

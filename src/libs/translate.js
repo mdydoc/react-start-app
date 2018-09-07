@@ -7,6 +7,7 @@ const _resolve = (path, obj) => {
         if (lastPath === curr && typeof prev[curr] === 'object') {
             return path;
         }
+
         return prev ? typeof prev[curr] !== 'undefined' ? prev[curr] : path : path;
     }, obj || self);
 };
@@ -19,4 +20,4 @@ export default function (key) {
     }
 
     return key;
-}
+};

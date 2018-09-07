@@ -1,6 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 import translate from '../libs/translate';
+import {setError} from "../actions/error";
+import store from "../store";
 
 class Http {
     constructor() {
@@ -69,11 +71,27 @@ class Http {
                     }
                 } else {
                     errorMessage = {error: translate(response.errorMessage)};
+
+                    if (response.errorMessage === 'errors.rememberToken.invalid') {
+                        localStorage.removeItem('rememberToken');
+                        window.location.reload();
+                    }
+                    if (response.errorMessage === 'errors.token') {
+                        sessionStorage.removeItem('jwt');
+                        window.location.reload();
+                    }
+
+                    if (response.errorMessage === 'errors.error') {
+                        store.dispatch(setError(errorMessage.error));
+                    }
                 }
             }
         } else {
+            let error = translate('misc.api');
             isError = true;
-            errorMessage = {error: 'Invalid response from API'};
+            errorMessage = {error};
+
+            store.dispatch(setError(error));
         }
 
         return {
@@ -95,12 +113,13 @@ class Http {
         try {
             this._response = await this._axios.get(url, {
                 params: {
-                    ...options
+                    ...options,
+                    language: localStorage.getItem('lang') || process.env.DEFAULT_LANG
                 },
                 ...authConfig
             });
         } catch (e) {
-            console.error(e);
+            store.dispatch(setError(e.message));
         }
 
         return this.build();
@@ -114,10 +133,16 @@ class Http {
 
         let authConfig = Http._getAuthConfig();
 
+        if (data instanceof FormData) {
+            data.append('language', localStorage.getItem('lang') || process.env.DEFAULT_LANG);
+        } else {
+            data.language = localStorage.getItem('lang') || process.env.DEFAULT_LANG;
+        }
+
         try {
             this._response = await this._axios.post(url, data, authConfig);
         } catch (e) {
-            console.error(e);
+            store.dispatch(setError(e.message));
         }
 
         return this.build();
@@ -134,7 +159,7 @@ class Http {
         try {
             this._response = await this._axios.delete(url, authConfig);
         } catch (e) {
-            console.error(e);
+            store.dispatch(setError(e.message));
         }
 
         return this.build();
@@ -149,9 +174,12 @@ class Http {
         let authConfig = Http._getAuthConfig();
 
         try {
-            this._response = await this._axios.put(url, data, authConfig);
+            this._response = await this._axios.put(url, {
+                ...data,
+                language: localStorage.getItem('lang') || process.env.DEFAULT_LANG
+            }, authConfig);
         } catch (e) {
-            console.error(e);
+            store.dispatch(setError(e.message));
         }
 
         return this.build();
@@ -166,9 +194,12 @@ class Http {
         let authConfig = Http._getAuthConfig();
 
         try {
-            this._response = await this._axios.patch(url, data, authConfig);
+            this._response = await this._axios.patch(url, {
+                ...data,
+                language: localStorage.getItem('lang') || process.env.DEFAULT_LANG
+            }, authConfig);
         } catch (e) {
-            console.error(e);
+            store.dispatch(setError(e.message));
         }
 
         return this.build();

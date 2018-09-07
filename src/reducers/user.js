@@ -1,8 +1,9 @@
-import {SET_USER, SET_USER_ERRORS} from '../actions/user';
+import {SET_USER, SET_USER_ERRORS, SET_LOADING} from '../actions/user';
 
 export default (state = {
     user: false,
-    errors: false
+    errors: false,
+    loading: true
 }, action) => {
     switch (action.type) {
         case SET_USER:
@@ -18,6 +19,9 @@ export default (state = {
             } else {
                 state = {...state, errors: false};
             }
+            break;
+        case SET_LOADING:
+            state = {...state, loading: action.payload};
             break;
     }
 

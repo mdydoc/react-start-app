@@ -1,7 +1,9 @@
 import http from '../libs/http';
+import {setError} from "./error";
 
 export const SET_USER = '@set-user';
 export const SET_USER_ERRORS = '@set-user-errors';
+export const SET_LOADING = '@set-loading';
 
 export const loginUser = (payload = {}) => {
     return async (dispatch) => {
@@ -17,11 +19,12 @@ export const loginUser = (payload = {}) => {
 
                 dispatch(setUser(res.data.user));
                 dispatch(setUserErrors(false));
+                dispatch(setLoading(false));
             } else {
                 dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
-            console.error(e);
+            dispatch(setError(e.message));
         }
     };
 };
@@ -41,13 +44,13 @@ export const logoutUser = () => {
 
             if (!res.isError) {
                 sessionStorage.clear();
-                localStorage.clear();
+                localStorage.removeItem('rememberToken');
                 dispatch(setUser(false));
             } else {
                 dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
-            console.error(e);
+            dispatch(setError(e.message));
         }
     };
 };
@@ -67,11 +70,12 @@ export const getUser = () => {
             if (!res.isError) {
                 dispatch(setUser(res.data));
                 dispatch(setUserErrors(false));
+                dispatch(setLoading(false));
             } else {
                 dispatch(setUserErrors(res.errorMessage));
             }
         } catch (e) {
-            console.error(e);
+            dispatch(setError(e.message));
         }
     };
 };
@@ -83,10 +87,18 @@ export const setUserErrors = (payload) => {
     };
 };
 
+export const setLoading = (payload) => {
+    return {
+        payload,
+        type: SET_LOADING
+    };
+};
+
 export default {
     loginUser,
     logoutUser,
     setUser,
     getUser,
-    setUserErrors
+    setUserErrors,
+    setLoading
 };
