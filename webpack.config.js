@@ -37,7 +37,7 @@ module.exports = (env, options = {mode: 'production'}) => {
         devServer: {
             overlay: true,
             historyApiFallback: true,
-            port: 8080,
+            port: 9080,
             https: false,
             stats: {
                 cached: false,
