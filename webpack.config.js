@@ -31,7 +31,7 @@ module.exports = (env, options = {mode: 'production'}) => {
         bail: true,
         devtool: options.mode === 'production' ? 'source-map' : false,
         entry: [
-            'babel-polyfill',
+            '@babel/polyfill',
             './src/index.js'
         ],
         devServer: {

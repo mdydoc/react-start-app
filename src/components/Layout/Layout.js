@@ -1,28 +1,25 @@
 import React, {Component} from 'react';
+
+import {connect} from 'react-redux';
+import {Container, Modal} from "reactstrap";
+
 import Header from "./Header";
-import {Container} from "reactstrap";
 import Footer from "./Footer";
 
+@connect(
+    store => ({
+        error: store.error
+    }),
+    dispatch => ({})
+)
 export default class Layout extends Component {
-    constructor(props) {
-        super(props);
-
-        const rememberToken = localStorage.getItem('rememberToken');
-
-        if (rememberToken && !this.props.user) {
-            const {loginUser} = this.props;
-
-            let credentials = {
-                rememberToken
-            };
-
-            loginUser(credentials);
-        }
-    }
-
     render() {
+        const {error} = this.props;
+
+
         return (
             <Container fluid={true} className={'layout'}>
+                {error && <div>{error}</div>}
                 <Header/>
                 <div className={'content'}>
                     {this.props.children}

@@ -12,7 +12,7 @@ const _resolve = (path, obj) => {
     }, obj || self);
 };
 
-export default function (key) {
+export const translate = (key) => {
     let translation = store.getState().translation;
 
     if (Object.keys(translation).length > 0) {

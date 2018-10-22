@@ -1,4 +1,5 @@
 import http from '../libs/http';
+
 import {setError} from "./error";
 
 export const SET_USER = '@set-user';

@@ -4,12 +4,14 @@ import responsive from './responsive';
 import user from './user';
 import translation from './translation';
 import error from './error';
+import languages from './languages';
 
 const reducers = {
     responsive,
     user,
     translation,
-    error
+    error,
+    languages
 };
 
 export default combineReducers(reducers);

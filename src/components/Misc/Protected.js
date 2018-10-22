@@ -1,12 +1,16 @@
 import React, {Component} from 'react';
+
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+
 import userActions from "../../actions/user";
 
 export const Protected = (WrappedComponent) => {
     return connect(
         store => ({
-            user: store.user.user
+            user: store.user.user,
+            loading: store.user.loading,
+            translation: store.translation
         }),
         dispatch => ({
             ...bindActionCreators(userActions, dispatch)
@@ -37,6 +41,12 @@ export const Protected = (WrappedComponent) => {
         }
 
         render() {
+            const {loading} = this.props;
+
+            if (loading) {
+                return null;
+            }
+
             return <WrappedComponent {...this.props}/>;
         }
     });

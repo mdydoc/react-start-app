@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
+
 import {Provider} from 'react-redux';
+import moment from 'moment';
 import Router from '../router';
 import store from '../store';
 
@@ -10,12 +12,14 @@ export default class App extends Component {
     componentDidMount() {
         const lang = localStorage.getItem('lang') || process.env.DEFAULT_LANG;
 
+        moment.locale(lang);
+
         store.dispatch(getTranslation(lang));
 
-        window.addEventListener('resize', App._onResize);
+        window.addEventListener('resize', this._onResize);
     }
 
-    static _onResize() {
+    _onResize() {
         const width = window.innerWidth;
         const height = window.innerHeight;
 

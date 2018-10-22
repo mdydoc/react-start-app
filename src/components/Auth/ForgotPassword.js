@@ -1,6 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import AuthCard from "../Misc/AuthCard";
-import translate from "../../libs/translate";
+import {translate} from "../../libs/translate";
 import {Button, FormGroup, Input, Label} from "reactstrap";
 import uniqueId from 'react-html-id';
 import {Link} from 'react-router-dom';
